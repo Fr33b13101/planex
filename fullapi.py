@@ -82,14 +82,15 @@ app.add_middleware(
 )
 
 # -------------------------------
+# -------------------------------
 # JSON input schema
 # -------------------------------
 class ExoMinerInput(BaseModel):
-    lc_local: list[float]
-    lc_global: list[float]
-    lc_unfolded: list[float]
-    centroid: list[float]
-    scalar_features: list[float]
+    lc_local: list[float] | str
+    lc_global: list[float] | str
+    lc_unfolded: list[float] | str
+    centroid: list[float] | str
+    scalar_features: list[float] | str
 
 # -------------------------------
 # JSON-based prediction endpoint
@@ -97,12 +98,18 @@ class ExoMinerInput(BaseModel):
 @app.post("/predict/json")
 async def predict_from_json(data: ExoMinerInput):
     try:
-        # Convert lists from frontend JSON into correctly-shaped NumPy arrays
-        lc_local = np.full((1, 201, 1), data.lc_local, dtype=float)
-        lc_global = np.full((1, 2001, 1), data.lc_global, dtype=float)
-        lc_unfolded = np.full((1, 4000, 1), data.lc_unfolded, dtype=float)
-        centroid = np.full((1, 2001, 1), data.centroid, dtype=float)
-        scalar_features = np.full((1, 30), data.scalar_features, dtype=float)
+        # Helper: parse either list or CSV string into list of floats
+        def parse_array(x):
+            if isinstance(x, str):
+                return [float(v.strip()) for v in x.split(",")]
+            return x
+
+        # Convert lists/strings into correctly-shaped NumPy arrays
+        lc_local = np.full((1, 201, 1), parse_array(data.lc_local), dtype=float)
+        lc_global = np.full((1, 2001, 1), parse_array(data.lc_global), dtype=float)
+        lc_unfolded = np.full((1, 4000, 1), parse_array(data.lc_unfolded), dtype=float)
+        centroid = np.full((1, 2001, 1), parse_array(data.centroid), dtype=float)
+        scalar_features = np.full((1, 30), parse_array(data.scalar_features), dtype=float)
 
         # Make prediction
         preds = model.predict([lc_local, lc_global, lc_unfolded, centroid, scalar_features])
@@ -117,7 +124,7 @@ async def predict_from_json(data: ExoMinerInput):
     except Exception as e:
         return JSONResponse(status_code=400, content={"error": str(e)})
 
-        return JSONResponse(status_code=400, content={"error": str(e)})
+
 
 # -------------------------------
 # CSV prediction endpoint
