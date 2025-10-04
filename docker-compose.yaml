@@ -1,0 +1,13 @@
+services:
+  fullapi:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: exominer-api
+    ports:
+      - "8000:8000" # Maps container port 8000 to host port 8000
+    restart: unless-stopped
+    environment:
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - .:/app # Optional: mount current directory to container for live reload

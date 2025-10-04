@@ -1,0 +1,7 @@
+fastapi>=0.109.1
+uvicorn[standard]>=0.23.2
+tensorflow>=2.15.0
+numpy>=1.26.0
+pandas>=2.1.0
+astroquery==0.4.11
+astropy==6.1.0      # for Quantity etc.
