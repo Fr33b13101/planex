@@ -4,4 +4,5 @@ tensorflow>=2.15.0
 numpy>=1.26.0
 pandas>=2.1.0
 astroquery==0.4.11
-astropy==6.1.0      # for Quantity etc.
+astropy==6.1.0 
+python-multipart==0.0.6   # for Quantity etc.
