@@ -70,12 +70,16 @@ def get_kepid_classification(kepid):
 MODEL_PATH = "exominer_like_keras.keras"
 model = tf.keras.models.load_model(MODEL_PATH)
 
-app = FastAPI(title="ExoMiner Classification API")
+app = FastAPI()
 
-# Allow cross-origin requests (helps prevent 405 on browser preflight OPTIONS)
+origins = [
+    "https://www.planex.wiki",
+    "https://planex.wiki"
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
