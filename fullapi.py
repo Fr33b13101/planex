@@ -72,11 +72,7 @@ model = tf.keras.models.load_model(MODEL_PATH)
 
 app = FastAPI()
 
-origins = [
-    "https://www.planex.wiki",
-    "https://planex.wiki",
-    'https://planex-nu.vercel.app'
-]
+
 
 app.add_middleware(
     CORSMiddleware,
@@ -127,7 +123,14 @@ async def predict_from_json(data: ExoMinerInput):
         return {"class": label, "confidence": confidence_percent}
 
     except Exception as e:
-        return JSONResponse(status_code=400, content={"error": str(e)})
+        problem = {
+            "type": "about:blank",
+            "title": "Not Found",
+            "status": 404,
+            "detail": str(e),
+            "instance": "/predict/json"  # or any relevant endpoint path
+        }
+        return JSONResponse(status_code=404, content=problem)
 
 
 
