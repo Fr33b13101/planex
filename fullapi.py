@@ -171,7 +171,14 @@ async def predict_from_csv(file: UploadFile = File(...)):
         )
 
     except Exception as e:
-        return JSONResponse(status_code=400, content={"error": str(e)})
+        problem = {
+            "type": "about:blank",
+            "title": "Not Found",
+            "status": 404,
+            "detail": str(e),
+            "instance": "/predict/json"  # or any relevant endpoint path
+        }
+        return JSONResponse(status_code=404, content=problem)
 
 # -------------------------------
 # Kepler API endpoint
@@ -182,7 +189,14 @@ def fetch_kepid(kepid: int):
         data = get_kepid_classification(kepid)
         return JSONResponse(content=data)
     except Exception as e:
-        return JSONResponse(status_code=400, content={"error": str(e)})
+        problem = {
+            "type": "about:blank",
+            "title": "Not Found",
+            "status": 404,
+            "detail": str(e),
+            "instance": "/predict/json"  # or any relevant endpoint path
+        }
+        return JSONResponse(status_code=404, content=problem)
 
 # -------------------------------
 # Root route
