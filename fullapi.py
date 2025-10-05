@@ -74,7 +74,8 @@ app = FastAPI()
 
 origins = [
     "https://www.planex.wiki",
-    "https://planex.wiki"
+    "https://planex.wiki",
+    'https://planex-nu.vercel.app/'
 ]
 
 app.add_middleware(
